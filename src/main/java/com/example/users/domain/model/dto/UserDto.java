@@ -1,5 +1,6 @@
 package com.example.users.domain.model.dto;
 
+import com.example.users.domain.model.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,12 +14,12 @@ import java.time.LocalDate;
 public class UserDto {
     private Long id;
     private String name;
-    private String lastname;
+    private String lastName;
     private String dni;
     private String telephone;
     private LocalDate dateAge;
     private String email;
     private String password;
-    private String idRole;
+    private Role role;
 
 }

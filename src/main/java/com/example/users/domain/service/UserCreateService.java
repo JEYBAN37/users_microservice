@@ -18,14 +18,13 @@ public class UserCreateService {
 
     public User execute (UserCreateCommand createCommand){
         validateParams(createCommand);
-        Role role = userDao.getByIdRole(createCommand.getRole());
+        Role role = userDao.getByRole(createCommand.getRole());
 
         if (role == null)
             throw new UserException(MESSAGE_ERROR_ROLE_NOT);
 
         User userToCreate = new User().requestToCreate(
-                createCommand,
-                role
+                createCommand
         );
         return userRepository.create(userToCreate);
     }
@@ -33,7 +32,6 @@ public class UserCreateService {
 private void validateParams (UserCreateCommand createCommand){
 
     if (createCommand.getId() != null && userDao.idExist(createCommand.getId())) {
-        System.out.println("Throwing exception with message: " + MESSAGE_ERROR_ADD);  // Debugging line
         throw new UserException(MESSAGE_ERROR_ADD);
     }
     if (userDao.nameExist(createCommand.getName()))

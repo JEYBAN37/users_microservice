@@ -1,12 +1,13 @@
 package com.example.users.domain.model.entity.uservalidates;
 
 import com.example.users.domain.model.exception.UserException;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.Period;
 
 
-
+@Getter
 public class UserDateAge {
     private static final int MUM_ALLOW_AGE = 18;
     private static final String MESSAGE_NOT_PERMITTED = "The person is a minor. Not permitted.";

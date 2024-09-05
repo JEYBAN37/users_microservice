@@ -2,11 +2,9 @@ package com.example.users.domain.model.entity;
 
 import com.example.users.domain.model.dto.command.UserCreateCommand;
 import com.example.users.domain.model.entity.uservalidates.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
 
 
@@ -24,7 +22,7 @@ public class User {
     private String password;
     private Role role;
 
-    public User requestToCreate(UserCreateCommand userCreateCommand,Role role)
+    public User requestToCreate(UserCreateCommand userCreateCommand)
     {
         this.name = UserName.of(userCreateCommand.getName());
         this.lastname = UserLastName.of(userCreateCommand.getLastname());
@@ -33,7 +31,25 @@ public class User {
         this.dateAge = UserDateAge.of(userCreateCommand.getDateAge());
         this.email = UserEmail.of(userCreateCommand.getEmail());
         this.password = userCreateCommand.getPassword();
-        this.role = role;
+        this.role = userCreateCommand.getRole();
         return this;
     }
+
+    public String getName() {
+        return name.getName();
+    }
+    public String getLastName() {
+        return lastname.getLastName();
+    }
+    public String getDni() {return dni.getDni();
+    }
+    public String getTelephone() {
+        return telephone.getTelephone();
+    }
+
+    public LocalDate getDateAge (){return dateAge.getDateAge();}
+
+    public String getEmail () {return email.getEmail();}
+
+
 }

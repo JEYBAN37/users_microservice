@@ -9,15 +9,16 @@ import com.example.users.domain.port.repository.UserRepository;
 import com.example.users.domain.service.UserCreateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class UserCreateServiceTest {
+
+class UserCreateServiceTest {
 
     private UserCreateService userCreateService;
     private UserRepository userRepository;
@@ -31,7 +32,8 @@ public class UserCreateServiceTest {
     }
 
     @Test
-    public void testExecute_UserAlreadyExists_ShouldThrowException() {
+     void testExecute_whenUserAlreadyExists_ShouldThrowException() {
+        //arrange
         UserCreateCommand createCommand = new UserCreateCommand();
         createCommand.setId(1L);
         createCommand.setName("John");
@@ -41,11 +43,11 @@ public class UserCreateServiceTest {
         createCommand.setDateAge(LocalDate.of(1995, 5, 15));
         createCommand.setEmail("john.doe@example.com");
         createCommand.setPassword("securePassword123");
-        createCommand.setRole(2L);
+        createCommand.setRole(Role.ADMIN);
 
 
         when(userDao.idExist(createCommand.getId())).thenReturn(true);
-
+//act y assert
         UserException exception = assertThrows(UserException.class, () -> {
             userCreateService.execute(createCommand);
         });
@@ -53,7 +55,8 @@ public class UserCreateServiceTest {
         assertEquals("User Exist", exception.getErrorMessage());
     }
     @Test
-    public void shouldThrowUserExceptionWhenIdExists() {
+     void whenIdExist_shouldThrowUserException() {
+        //arrange
         when(userDao.idExist(anyLong())).thenReturn(true);
 
         UserCreateCommand createCommand = new UserCreateCommand();
@@ -65,62 +68,67 @@ public class UserCreateServiceTest {
         createCommand.setDateAge(LocalDate.of(1995, 5, 15));
         createCommand.setEmail("john.doe@example.com");
         createCommand.setPassword("securePassword123");
-        createCommand.setRole(2L);
+        createCommand.setRole(Role.ADMIN);
 
-
+//act
         UserException exception = assertThrows(UserException.class, () -> {
             userCreateService.execute(createCommand);
         });
 
         String expectedMessage = "User Exist";
         String actualMessage = exception.getErrorMessage();
-
+//assert
         assertEquals(expectedMessage, actualMessage);
     }
 
 
     @Test
-    public void testExecute_NameAlreadyExists_ShouldThrowException() {
+     void testExecute_whenNameAlreadyExists_ShouldThrowException() {
+        // arrange
         UserCreateCommand createCommand = new UserCreateCommand();
         createCommand.setName("existingUser");
 
         when(userDao.nameExist(createCommand.getName())).thenReturn(true);
-
+        // act
         UserException exception = assertThrows(UserException.class, () -> {
             userCreateService.execute(createCommand);
         });
-
+        // assert
         assertEquals("User Exist", exception.getErrorMessage());
     }
 
     @Test
-    public void testExecute_RoleIsNull_ShouldThrowException() {
+     void testExecute_RoleIsNull_ShouldThrowException() {
+        // arrange
         UserCreateCommand createCommand = new UserCreateCommand();
         createCommand.setRole(null);
-
+        // act
         UserException exception = assertThrows(UserException.class, () -> {
             userCreateService.execute(createCommand);
         });
-
+        // assert
         assertEquals("Role Not Found", exception.getErrorMessage());
     }
 
     @Test
-    public void testExecute_RoleNotFound_ShouldThrowException() {
+     void testExecute_whenRoleNotFound_shouldThrowException() {
+        // arrange
         UserCreateCommand createCommand = new UserCreateCommand();
-        createCommand.setRole(1L);
+        createCommand.setRole(Role.ADMIN);
 
-        when(userDao.getByIdRole(createCommand.getRole())).thenReturn(null);
-
+        when(userDao.getByRole(createCommand.getRole())).thenReturn(null);
+        // act
         UserException exception = assertThrows(UserException.class, () -> {
             userCreateService.execute(createCommand);
         });
-
+        // assert
         assertEquals("Role Inject Not Found", exception.getErrorMessage());
     }
 
     @Test
-    public void testExecute_ValidUser_ShouldCreateUser() {
+     void testExecute_whenValidUser_shouldCreateUser() {
+        // arrange
+
         UserCreateCommand createCommand = new UserCreateCommand();
         createCommand.setId(1L);
         createCommand.setName("John");
@@ -130,16 +138,18 @@ public class UserCreateServiceTest {
         createCommand.setDateAge(LocalDate.of(1995, 5, 15));
         createCommand.setEmail("john.doe@example.com");
         createCommand.setPassword("securePassword123");
-        createCommand.setRole(1L);
+        createCommand.setRole(Role.ADMIN);
 
-        Role role = new Role();
-        when(userDao.getByIdRole(createCommand.getRole())).thenReturn(role);
+        Role role =  Role.ADMIN;
+        when(userDao.getByRole(createCommand.getRole())).thenReturn(role);
 
         User user = new User();
         when(userRepository.create(any(User.class))).thenReturn(user);
 
+        // act
         User createdUser = userCreateService.execute(createCommand);
 
+        // assert
         assertNotNull(createdUser);
         verify(userRepository, times(1)).create(any(User.class));
     }

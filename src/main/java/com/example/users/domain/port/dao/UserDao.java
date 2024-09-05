@@ -14,5 +14,5 @@ public interface UserDao {
     boolean idExist(Long id);
     List<User> getAll(int page, int size, boolean ascending, String byName, String byBrand, String byCategory);
 
-    Role getByIdRole(Long id);
+    Role getByRole(Role role);
 }

@@ -1,7 +1,9 @@
 package com.example.users.domain.model.entity.uservalidates;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class UserEmail {
     private static final String MESSAGE_MANDATORY = "Email is mandatory";

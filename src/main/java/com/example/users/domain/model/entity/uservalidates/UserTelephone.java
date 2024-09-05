@@ -1,7 +1,9 @@
 package com.example.users.domain.model.entity.uservalidates;
 
 import com.example.users.domain.model.exception.UserException;
+import lombok.Getter;
 
+@Getter
 public class UserTelephone {
     String telephone;
     private static final int MAXIMUM_ALLOW_LETTERS = 13;

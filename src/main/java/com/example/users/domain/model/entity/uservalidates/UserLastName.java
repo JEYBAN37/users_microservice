@@ -11,10 +11,10 @@ public class UserLastName {
     private static final String MESSAGE_MANDATORY = "LastName is mandatory";
     private static final String MESSAGE_MAX_BIGGER = "LastName don't be bigger than 50 characters";
 
-    String lastname;
+    String lastName;
 
     private UserLastName(String lastname) {
-        this.lastname = lastname;
+        this.lastName = lastname;
     }
 
     public static UserLastName of(String lastname) {

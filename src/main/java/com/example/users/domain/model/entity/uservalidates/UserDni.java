@@ -1,7 +1,9 @@
 package com.example.users.domain.model.entity.uservalidates;
 
 import com.example.users.domain.model.exception.UserException;
+import lombok.Getter;
 
+@Getter
 public class UserDni {
     private static final int MAXIMUM_ALLOW_LETTERS = 50;
     private static final String MESSAGE_MANDATORY = "Dni is mandatory";

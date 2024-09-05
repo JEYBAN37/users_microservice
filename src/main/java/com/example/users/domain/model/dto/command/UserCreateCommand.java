@@ -1,5 +1,6 @@
 package com.example.users.domain.model.dto.command;
 
+import com.example.users.domain.model.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,5 @@ public class UserCreateCommand {
     private LocalDate dateAge;
     private String email;
     private String password;
-    private Long role;
+    private Role role;
 }
