@@ -23,7 +23,7 @@ public class UserLastName {
     }
 
     private static void toValidName(String lastname){
-        if(lastname.isEmpty())
+        if(lastname == null || lastname.isEmpty())
             throw new UserException(MESSAGE_MANDATORY);
         if(lastname.length() > MAXIMUM_ALLOW_LETTERS)
             throw new UserException(MESSAGE_MAX_BIGGER);

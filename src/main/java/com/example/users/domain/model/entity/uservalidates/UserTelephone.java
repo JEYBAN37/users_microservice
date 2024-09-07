@@ -7,9 +7,9 @@ import lombok.Getter;
 public class UserTelephone {
     String telephone;
     private static final int MAXIMUM_ALLOW_LETTERS = 13;
-    private static final String MESSAGE_MANDATORY = "LastName is mandatory";
-    private static final String MESSAGE_MAX_BIGGER = "LastName don't be bigger than 50 characters";
-    private static final String MESSAGE_NOT_DIGITS = "LastName don't be bigger than 50 characters";
+    private static final String MESSAGE_MANDATORY = "telephone is mandatory";
+    private static final String MESSAGE_MAX_BIGGER = "telephone don't be bigger than 13 characters";
+    private static final String MESSAGE_NOT_DIGITS = "telephone don't be alphanumeric";
     private UserTelephone(String telephone) {
         this.telephone = telephone;
     }
@@ -20,7 +20,7 @@ public class UserTelephone {
     }
 
     private static void toValidTelephone(String telephone){
-        if(telephone.isEmpty())
+        if(telephone == null || telephone.isEmpty())
             throw new UserException(MESSAGE_MANDATORY);
         if(telephone.length() > MAXIMUM_ALLOW_LETTERS)
             throw new UserException(MESSAGE_MAX_BIGGER);

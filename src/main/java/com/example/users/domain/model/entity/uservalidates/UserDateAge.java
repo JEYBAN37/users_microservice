@@ -31,7 +31,7 @@ public class UserDateAge {
         LocalDate today = LocalDate.now();
 
         if (dateAge.isAfter(today)) {
-            throw new IllegalArgumentException(MESSAGE_NOT_FUTURE);
+            throw new UserException(MESSAGE_NOT_FUTURE);
         }
 
         int age = Period.between(dateAge, today).getYears();
