@@ -18,7 +18,7 @@ public class User {
     private UserTelephone telephone;
     private UserDateAge dateAge;
     private UserEmail email;
-    private String password;
+    private UserPassword password;
     private Role role;
 
     public User(Long id, String name, String lastName, String dni, String telephone,
@@ -30,7 +30,7 @@ public class User {
         this.telephone = UserTelephone.of(telephone);
         this.dateAge = UserDateAge.of(dateAge);
         this.email  = UserEmail.of(email);
-        this.password = password;
+        this.password = UserPassword.of(password);
         this.role = role;
     }
     public User requestToCreate(UserCreateCommand userCreateCommand)
@@ -41,7 +41,7 @@ public class User {
         this.telephone = UserTelephone.of(userCreateCommand.getTelephone());
         this.dateAge = UserDateAge.of(userCreateCommand.getDateAge());
         this.email = UserEmail.of(userCreateCommand.getEmail());
-        this.password = userCreateCommand.getPassword();
+        this.password = UserPassword.of(userCreateCommand.getPassword());
         this.role = userCreateCommand.getRole();
         return this;
     }
@@ -56,10 +56,8 @@ public class User {
     public String getTelephone() {
         return telephone.getTelephone();
     }
-
     public LocalDate getDateAge (){return dateAge.getDateAge();}
-
     public String getEmail () {return email.getEmail();}
-
+    public String getPassword () {return password.getPassword();}
 
 }

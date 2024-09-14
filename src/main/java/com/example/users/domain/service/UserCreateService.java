@@ -25,6 +25,7 @@ public class UserCreateService {
         return userRepository.create(userToCreate);
     }
 
+
 private void validateParams (UserCreateCommand createCommand){
 
     if (createCommand.getId() != null && userDao.idExist(createCommand.getId())) {

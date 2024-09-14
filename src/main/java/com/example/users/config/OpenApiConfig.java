@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "Microservice Stock",
-                description = "This is Api Microservice Stock First Module"
+                title = "Microservice User",
+                description = "This is Api Microservice User Second Module"
         )
 )
 public class OpenApiConfig {

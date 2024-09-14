@@ -25,7 +25,11 @@ public class ConfigFilter {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
-                                .requestMatchers("/public/**").permitAll()
+                                .requestMatchers("/public/**", "/v3/api-docs/**",   // Swagger 3 API Docs
+                                        "/swagger-ui/**",    // Swagger UI
+                                        "/swagger-ui.html",  // Página de Swagger UI
+                                        "/swagger-resources/**",  // Recursos de Swagger
+                                        "/webjars/**"    ).permitAll()
                                 .requestMatchers("/users/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )

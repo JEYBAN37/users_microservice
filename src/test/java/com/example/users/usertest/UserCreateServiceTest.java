@@ -37,7 +37,7 @@ class UserCreateServiceTest {
         UserCreateCommand createCommand = new UserCreateCommand();
         createCommand.setId(1L);
         createCommand.setName("John");
-        createCommand.setLastname("Doe");
+        createCommand.setLastName("Doe");
         createCommand.setDni("12345678");
         createCommand.setTelephone("+573177722509");
         createCommand.setDateAge(LocalDate.of(1995, 5, 15));
@@ -62,7 +62,7 @@ class UserCreateServiceTest {
         UserCreateCommand createCommand = new UserCreateCommand();
         createCommand.setId(1L);
         createCommand.setName("John");
-        createCommand.setLastname("Doe");
+        createCommand.setLastName("Doe");
         createCommand.setDni("12345678");
         createCommand.setTelephone("+573177722509");
         createCommand.setDateAge(LocalDate.of(1995, 5, 15));
@@ -88,7 +88,7 @@ class UserCreateServiceTest {
         UserCreateCommand createCommand = new UserCreateCommand();
         createCommand.setName("existingUser");
 
-        when(userDao.nameExist(createCommand.getName())).thenReturn(true);
+        when(userDao.emailExist(createCommand.getEmail())).thenReturn(true);
         // act
         UserException exception = assertThrows(UserException.class, () -> {
             userCreateService.execute(createCommand);
@@ -114,7 +114,15 @@ class UserCreateServiceTest {
      void testExecute_whenRoleNotFound_shouldThrowException() {
         // arrange
         UserCreateCommand createCommand = new UserCreateCommand();
-        createCommand.setRole(Role.ADMIN);
+        createCommand.setId(1L);
+        createCommand.setName("John");
+        createCommand.setLastName("Doe");
+        createCommand.setDni("12345678");
+        createCommand.setTelephone("+573177722509");
+        createCommand.setDateAge(LocalDate.of(1995, 5, 15));
+        createCommand.setEmail("john.doe@example.com");
+        createCommand.setPassword("securePassword123");
+
 
         when(userDao.getByRole(createCommand.getRole())).thenReturn(null);
         // act
@@ -122,23 +130,17 @@ class UserCreateServiceTest {
             userCreateService.execute(createCommand);
         });
         // assert
-        assertEquals("Role Inject Not Found", exception.getErrorMessage());
+        assertEquals("Role Not Found", exception.getErrorMessage());
     }
 
     @Test
      void testExecute_whenValidUser_shouldCreateUser() {
         // arrange
 
-        UserCreateCommand createCommand = new UserCreateCommand();
-        createCommand.setId(1L);
-        createCommand.setName("John");
-        createCommand.setLastname("Doe");
-        createCommand.setDni("12345678");
-        createCommand.setTelephone("+573177722509");
-        createCommand.setDateAge(LocalDate.of(1995, 5, 15));
-        createCommand.setEmail("john.doe@example.com");
-        createCommand.setPassword("securePassword123");
-        createCommand.setRole(Role.ADMIN);
+        UserCreateCommand createCommand = new UserCreateCommand(
+                1L,"John","Doe","12345678","+573177722509" ,LocalDate.of(1995, 5, 15),
+                "john.doe@example.com", "securePassword123@",Role.ADMIN
+        );
 
         Role role =  Role.ADMIN;
         when(userDao.getByRole(createCommand.getRole())).thenReturn(role);

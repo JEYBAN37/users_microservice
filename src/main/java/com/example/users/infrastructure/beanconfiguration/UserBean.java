@@ -6,8 +6,6 @@ import com.example.users.domain.port.JwtPort;
 import com.example.users.domain.port.dao.UserDao;
 import com.example.users.domain.port.repository.UserRepository;
 import com.example.users.domain.service.UserCreateService;
-import com.example.users.domain.service.UserDeleteService;
-import com.example.users.domain.service.UserUpdateService;
 import com.example.users.infrastructure.adapter.jpa.UserSpringJpaAdapterRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,15 +27,6 @@ public class UserBean {
     @Bean
     public UserCreateService userCreateService (UserRepository userRepository, UserDao userDao){
         return new UserCreateService(userRepository,userDao);
-    }
-    @Bean
-    public UserDeleteService userDeleteService (UserRepository userRepository, UserDao userDao){
-        return new UserDeleteService(userRepository,userDao);
-    }
-
-    @Bean
-    public UserUpdateService userUpdateService (UserRepository userRepository, UserDao userDao){
-        return new UserUpdateService(userRepository,userDao);
     }
 
     @Bean

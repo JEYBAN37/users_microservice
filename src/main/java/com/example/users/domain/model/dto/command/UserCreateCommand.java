@@ -7,9 +7,9 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Builder
 @Getter
+@Setter
 public class UserCreateCommand {
     private Long id;
     private String name;

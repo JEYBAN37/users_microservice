@@ -31,7 +31,7 @@ public class UserSecurityController {
             @ApiResponse(responseCode = "201", description = "Article created", content = @Content),
             @ApiResponse(responseCode = "409", content = @Content)
     })
-    @PostMapping("/")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login ( @RequestBody AuthenticationRequest request) {
      return ResponseEntity.ok(userLogin.execute(request));
     }
