@@ -18,10 +18,7 @@ public class UserCreateService {
 
     public User execute (UserCreateCommand createCommand){
         validateParams(createCommand);
-
-        User userToCreate = new User().requestToCreate(
-                createCommand
-        );
+        User userToCreate = new User().requestToCreate(createCommand);
         return userRepository.create(userToCreate);
     }
 
@@ -34,9 +31,7 @@ private void validateParams (UserCreateCommand createCommand){
     if (userDao.emailExist(createCommand.getEmail()))
         throw new UserException(MESSAGE_ERROR_ADD);
 
-    if (createCommand.getRole()== null)
+    if (createCommand.getRole() == null)
         throw new UserException(MESSAGE_ERROR_ROLE);
-}
-
-
+    }
 }

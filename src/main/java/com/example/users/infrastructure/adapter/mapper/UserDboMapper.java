@@ -25,7 +25,10 @@ public UserEntity toDatabase (User domain){
             domain.getDateAge(),
             domain.getEmail(),
             encoderPassword.encode(domain.getPassword()),
-            domain.getRole()
+            domain.getRole(),
+            domain.getFails(),
+            domain.isLocked(),
+            domain.getLockTime()
     );
 }
 
@@ -42,7 +45,10 @@ public UserEntity toDatabase (User domain){
                 entity.getDateAge(),
                 entity.getEmail(),
                 entity.getPassword(),
-                entity.getRole()
+                entity.getRole(),
+                entity.getFails(),
+                entity.isLocked(),
+                entity.getLockTime()
                 );
     }
 
@@ -59,7 +65,10 @@ public UserEntity toDatabase (User domain){
                 userDto.getDateAge(),
                 userDto.getEmail(),
                 userDto.getPassword(),
-                userDto.getRole()
+                userDto.getRole(),
+                userDto.getFails(),
+                userDto.isLocked(),
+                userDto.getLockTime()
         );
     }
 
@@ -76,7 +85,10 @@ public UserEntity toDatabase (User domain){
                 userEntity.getDateAge(),
                 userEntity.getEmail(),
                 userEntity.getPassword(),
-                userEntity.getRole()
+                userEntity.getRole(),
+                userEntity.getFails(),
+                userEntity.isLocked(),
+                userEntity.getLockTime()
         );
     }
 

@@ -5,6 +5,8 @@ import com.example.users.domain.model.entity.uservalidates.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Getter
@@ -20,9 +22,12 @@ public class User {
     private UserEmail email;
     private UserPassword password;
     private Role role;
+    private int fails;
+    private boolean locked;
+    private Timestamp lockTime;
 
     public User(Long id, String name, String lastName, String dni, String telephone,
-                LocalDate dateAge, String email, String password, Role role){
+                LocalDate dateAge, String email, String password, Role role,int fails,boolean locked,Timestamp lockTime){
         this.id = id;
         this.name = UserName.of(name);
         this.lastName = UserLastName.of(lastName);
@@ -32,6 +37,9 @@ public class User {
         this.email  = UserEmail.of(email);
         this.password = UserPassword.of(password);
         this.role = role;
+        this.fails = fails;
+        this.locked = locked;
+        this.lockTime = lockTime;
     }
     public User requestToCreate(UserCreateCommand userCreateCommand)
     {
@@ -43,6 +51,9 @@ public class User {
         this.email = UserEmail.of(userCreateCommand.getEmail());
         this.password = UserPassword.of(userCreateCommand.getPassword());
         this.role = userCreateCommand.getRole();
+        this.fails = 0;
+        this.locked = false;
+        this.lockTime = null;
         return this;
     }
 

@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import java.util.Collection;
@@ -36,6 +37,9 @@ public class UserEntity implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private int fails;
+    private boolean locked;
+    private Timestamp lockTime;
 
 
     @Override

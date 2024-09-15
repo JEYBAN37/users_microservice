@@ -5,6 +5,7 @@ import com.example.users.application.query.UserLogin;
 import com.example.users.domain.port.JwtPort;
 import com.example.users.domain.port.dao.UserDao;
 import com.example.users.domain.port.repository.UserRepository;
+import com.example.users.domain.service.LoginAttemptService;
 import com.example.users.domain.service.UserCreateService;
 import com.example.users.infrastructure.adapter.jpa.UserSpringJpaAdapterRepository;
 import lombok.AllArgsConstructor;
@@ -30,9 +31,9 @@ public class UserBean {
     }
 
     @Bean
-    public UserLogin userLogin( AuthenticationManager authenticationManager,UserDao userDao,
-                                JwtPort jwtPort, UserDtoMapper userDtoMapper){
-        return new UserLogin(authenticationManager,userDao,jwtPort,userDtoMapper);
+    public UserLogin userLogin(AuthenticationManager authenticationManager, UserDao userDao,
+                               JwtPort jwtPort, UserDtoMapper userDtoMapper, LoginAttemptService loginAttemptService){
+        return new UserLogin(authenticationManager,userDao,jwtPort,userDtoMapper, loginAttemptService);
     }
 
     @Bean
@@ -59,6 +60,10 @@ public class UserBean {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    @Bean
+    public LoginAttemptService loginAttemptService (UserRepository userRepository, UserDao userDao){
+        return new LoginAttemptService(userDao,userRepository);
+    }
 
 
 

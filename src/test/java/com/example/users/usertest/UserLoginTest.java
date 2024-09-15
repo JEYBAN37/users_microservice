@@ -13,6 +13,7 @@ import com.example.users.domain.model.entity.User;
 import com.example.users.domain.model.exception.UserException;
 import com.example.users.domain.port.JwtPort;
 import com.example.users.domain.port.dao.UserDao;
+import com.example.users.domain.service.LoginAttemptService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,6 +37,9 @@ class UserLoginTest {
 
     @Mock
     private UserDtoMapper userDtoMapper;
+
+    @Mock
+    private LoginAttemptService loginAttemptService;
 
     @InjectMocks
     private UserLogin userLogin;
@@ -79,7 +83,8 @@ class UserLoginTest {
     @Test
     void test_execute_whenAuthenticationFails_shouldThrowException() {
         // Arrange
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(new AuthenticationException("Authentication failed") {});
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new AuthenticationException("Authentication failed") {});
 
         // Act & Assert
         AuthenticationException exception = assertThrows(AuthenticationException.class, () -> {
@@ -89,7 +94,7 @@ class UserLoginTest {
         // Assert
         assertEquals("Authentication failed", exception.getMessage());
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userDao, never()).getUser(anyString()); // Ensure that userDao.getUser is not called
+        verify(userDao, never()).getUser(anyString());
     }
 
 }

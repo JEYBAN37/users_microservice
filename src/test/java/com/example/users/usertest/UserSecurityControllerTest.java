@@ -4,7 +4,6 @@ import com.example.users.application.query.UserLogin;
 import com.example.users.domain.model.dto.AuthenticationRequest;
 import com.example.users.domain.model.dto.AuthenticationResponse;
 import com.example.users.domain.model.dto.command.UserCreateCommand;
-import com.example.users.domain.model.entity.Role;
 import com.example.users.infrastructure.rest.controller.UserSecurityController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,7 @@ class UserSecurityControllerTest {
         request.setEmail("test@example.com");
         request.setPassword("Password123");
 
-        AuthenticationResponse expectedResponse = new AuthenticationResponse("token123", Role.ADMIN);
+        AuthenticationResponse expectedResponse = new AuthenticationResponse("token123");
 
         when(userLogin.execute(request)).thenReturn(expectedResponse);
 
@@ -59,7 +58,7 @@ class UserSecurityControllerTest {
         createCommand.setEmail("test@example.com");
         createCommand.setPassword("Password123");
 
-        AuthenticationResponse expectedResponse = new AuthenticationResponse("token123", Role.ADMIN);
+        AuthenticationResponse expectedResponse = new AuthenticationResponse("token123");
 
         when(userCreateHandler.execute(createCommand)).thenReturn(expectedResponse);
 
