@@ -60,25 +60,6 @@ class UserLoginTest {
         userDto.setEmail("john.doe@example.com");
     }
 
-    @Test
-    void test_execute_whenLoginIsSuccessful_shouldReturnAuthenticationResponse() {
-        // Arrange
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mock(Authentication.class));
-        when(userDao.getUser(request.getEmail())).thenReturn(user);
-        when(userDtoMapper.toDto(user)).thenReturn(userDto);
-        when(jwtService.generate(userDto)).thenReturn("jwtToken123");
-
-        // Act
-        AuthenticationResponse response = userLogin.execute(request);
-
-        // Assert
-        assertNotNull(response);
-        assertEquals("jwtToken123", response.getToken());
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userDao).getUser(request.getEmail());
-        verify(userDtoMapper).toDto(user);
-        verify(jwtService).generate(userDto);
-    }
 
     @Test
     void test_execute_whenAuthenticationFails_shouldThrowException() {

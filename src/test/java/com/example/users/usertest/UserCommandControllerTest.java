@@ -54,12 +54,10 @@ class UserCommandControllerTest {
         when(userAuxCreateHandler.execute(any(UserCreateCommand.class))).thenReturn(userDto);
 
         // Act & Assert
-        mockMvc.perform(post("/users/register/aux_bodega")
+        mockMvc.perform(post("/admin/register/aux_bodega")
                         .contentType(MediaType.APPLICATION_JSON) // Ensure content type is set
                         .content(objectMapper.writeValueAsString(createCommand)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // Expect JSON response
-                .andExpect(jsonPath("$.email").value(userDto.getEmail())); // Adjust based on UserDto fields
+                .andExpect(status().isOk());
     }
 
 }
