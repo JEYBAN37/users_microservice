@@ -14,7 +14,6 @@ public class UserAuxCreateHandler {
     private final UserCreateService userCreateService;
     private final UserDtoMapper userDtoMapper;
     public UserDto execute (UserCreateCommand userCreateCommand){
-        userCreateCommand.setRole(Role.AUX_BODEGA);
-        return userDtoMapper.toDto(userCreateService.execute(userCreateCommand));
+        return userDtoMapper.toDto(userCreateService.execute(userCreateCommand,Role.AUX_BODEGA));
     }
 }

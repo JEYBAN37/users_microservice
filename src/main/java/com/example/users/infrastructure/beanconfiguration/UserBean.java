@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static com.example.users.domain.model.constant.UserConstant.USER_NOT_FOUND;
+
 
 @Configuration
 @AllArgsConstructor
@@ -31,9 +33,9 @@ public class UserBean {
     }
 
     @Bean
-    public UserLogin userLogin(AuthenticationManager authenticationManager, UserDao userDao,
-                               JwtPort jwtPort, UserDtoMapper userDtoMapper, LoginAttemptService loginAttemptService){
-        return new UserLogin(authenticationManager,userDao,jwtPort,userDtoMapper, loginAttemptService);
+    public UserLogin userLogin(AuthenticationManager authenticationManager,
+                               JwtPort jwtPort,  LoginAttemptService loginAttemptService){
+        return new UserLogin(authenticationManager,jwtPort, loginAttemptService);
     }
 
     @Bean
@@ -57,7 +59,7 @@ public class UserBean {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userSpringJpaAdapterRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
     }
 
     @Bean

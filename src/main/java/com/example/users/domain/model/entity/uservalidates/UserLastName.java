@@ -4,12 +4,13 @@ import com.example.users.domain.model.exception.UserException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.example.users.domain.model.constant.UserConstant.*;
+
+
 @NoArgsConstructor
 @Getter
 public class UserLastName {
-    private static final int MAXIMUM_ALLOW_LETTERS = 50;
-    private static final String MESSAGE_MANDATORY = "LastName is mandatory";
-    private static final String MESSAGE_MAX_BIGGER = "LastName don't be bigger than 50 characters";
+
 
     String lastName;
 
@@ -18,14 +19,15 @@ public class UserLastName {
     }
 
     public static UserLastName of(String lastname) {
-        toValidName(lastname);
-        return new UserLastName(lastname);
+        return new UserLastName( toValidLastName(lastname));
     }
 
-    private static void toValidName(String lastname){
+    private static String toValidLastName(String lastname){
         if(lastname == null || lastname.isEmpty())
-            throw new UserException(MESSAGE_MANDATORY);
-        if(lastname.length() > MAXIMUM_ALLOW_LETTERS)
-            throw new UserException(MESSAGE_MAX_BIGGER);
+            throw new UserException(MESSAGE_MANDATORY_LASTNAME);
+        String lastnameTrip = lastname.trim().toUpperCase();
+        if(lastnameTrip.length() > MAXIMUM_ALLOW_LETTERS)
+            throw new UserException(MESSAGE_MAX_BIGGER_LASTNAME);
+        return lastnameTrip;
     }
 }

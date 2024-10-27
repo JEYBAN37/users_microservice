@@ -51,7 +51,6 @@ class UserCreateHandlerTest {
         createCommand.setDateAge(LocalDate.of(1995, 5, 15));
         createCommand.setEmail("john.doe@example.com");
         createCommand.setPassword("securePassword123");
-        createCommand.setRole(Role.ADMIN);
 
         user = new User();
         userDto = new UserDto();
@@ -61,7 +60,7 @@ class UserCreateHandlerTest {
     @Test
     void test_whenCreateAndReturnUserDto_shouldReturnAuthenticationResponse() {
         // Arrange
-        when(userCreateService.execute(createCommand)).thenReturn(user);
+        when(userCreateService.execute(createCommand,Role.ADMIN)).thenReturn(user);
         when(userDtoMapper.toDto(user)).thenReturn(userDto);
         when(jwtService.generateToken(userDto)).thenReturn("jwt_token");
 
@@ -71,7 +70,7 @@ class UserCreateHandlerTest {
         // Assert
         assertNotNull(result);
         assertEquals("jwt_token", result.getToken());
-        verify(userCreateService).execute(createCommand);
+        verify(userCreateService).execute(createCommand,Role.ADMIN);
         verify(userDtoMapper).toDto(user);
         verify(jwtService).generateToken(userDto);
     }
@@ -80,14 +79,14 @@ class UserCreateHandlerTest {
     @Test
     void test_whenUserAlreadyExists_shouldThrowUserException() {
         // Arrange
-        when(userCreateService.execute(createCommand)).thenThrow(new UserException("User already exists"));
+        when(userCreateService.execute(createCommand,Role.ADMIN)).thenThrow(new UserException("User already exists"));
 
         // Act & Assert
         UserException exception = assertThrows(UserException.class, () -> {
             userCreateHandler.execute(createCommand);
         });
         assertEquals("User already exists", exception.getErrorMessage());
-        verify(userCreateService).execute(createCommand);
+        verify(userCreateService).execute(createCommand,Role.ADMIN);
         verifyNoMoreInteractions(jwtService); // El jwtService no debe ser llamado si falla la creación
     }
 
@@ -95,7 +94,7 @@ class UserCreateHandlerTest {
     @Test
     void test_whenTokenGenerationFails_shouldThrowException() {
         // Arrange
-        when(userCreateService.execute(createCommand)).thenReturn(user);
+        when(userCreateService.execute(createCommand,Role.ADMIN)).thenReturn(user);
         when(userDtoMapper.toDto(user)).thenReturn(userDto);
         when(jwtService.generateToken(userDto)).thenThrow(new RuntimeException("Token generation failed"));
 
@@ -104,7 +103,7 @@ class UserCreateHandlerTest {
             userCreateHandler.execute(createCommand);
         });
         assertEquals("Token generation failed", exception.getMessage());
-        verify(userCreateService).execute(createCommand);
+        verify(userCreateService).execute(createCommand,Role.ADMIN);
         verify(jwtService).generateToken(userDto);
     }
 
@@ -112,7 +111,7 @@ class UserCreateHandlerTest {
     @Test
     void test_whenUserDtoMappingFails_shouldThrowException() {
         // Arrange
-        when(userCreateService.execute(createCommand)).thenReturn(user);
+        when(userCreateService.execute(createCommand,Role.ADMIN)).thenReturn(user);
         when(userDtoMapper.toDto(user)).thenThrow(new RuntimeException("UserDto mapping failed"));
 
         // Act & Assert
@@ -120,7 +119,7 @@ class UserCreateHandlerTest {
             userCreateHandler.execute(createCommand);
         });
         assertEquals("UserDto mapping failed", exception.getMessage());
-        verify(userCreateService).execute(createCommand);
+        verify(userCreateService).execute(createCommand,Role.ADMIN);
         verify(userDtoMapper).toDto(user);
         verifyNoMoreInteractions(jwtService); // No debe llamar a jwtService si falla el mapeo
     }
@@ -128,9 +127,8 @@ class UserCreateHandlerTest {
     // Test positivo: Usuario creado con rol diferente
     @Test
     void test_whenUserCreatedWithDifferentRole_shouldReturnAuthenticationResponse() {
-        // Arrange
-        createCommand.setRole(Role.CLIENTE); // Cambiar el rol
-        when(userCreateService.execute(createCommand)).thenReturn(user);
+        // Arrange// Cambiar el rol
+        when(userCreateService.execute(createCommand,Role.ADMIN)).thenReturn(user);
         when(userDtoMapper.toDto(user)).thenReturn(userDto);
         when(jwtService.generateToken(userDto)).thenReturn("jwt_token_user");
 
@@ -140,7 +138,7 @@ class UserCreateHandlerTest {
         // Assert
         assertNotNull(result);
         assertEquals("jwt_token_user", result.getToken());
-        verify(userCreateService).execute(createCommand);
+        verify(userCreateService).execute(createCommand,Role.ADMIN);
         verify(userDtoMapper).toDto(user);
         verify(jwtService).generateToken(userDto);
     }

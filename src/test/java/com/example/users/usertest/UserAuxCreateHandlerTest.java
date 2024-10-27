@@ -52,7 +52,7 @@ class UserAuxCreateHandlerTest {
     @Test
     void test_execute_whenUserCreatedSuccessfully_shouldReturnUserDto() {
         // Arrange
-        when(userCreateService.execute(createCommand)).thenReturn(user);
+        when(userCreateService.execute(createCommand,Role.AUX_BODEGA)).thenReturn(user);
         when(userDtoMapper.toDto(user)).thenReturn(userDto);
 
         // Act
@@ -63,15 +63,14 @@ class UserAuxCreateHandlerTest {
         assertEquals("Jane", result.getName());
         assertEquals("Doe", result.getLastName());
         assertEquals("jane.doe@example.com", result.getEmail());
-        assertEquals(Role.AUX_BODEGA, createCommand.getRole()); // Verify role is set to AUX_BODEGA
-        verify(userCreateService).execute(createCommand);
+        verify(userCreateService).execute(createCommand,Role.AUX_BODEGA);
         verify(userDtoMapper).toDto(user);
     }
 
     @Test
     void test_execute_whenUserCreationFails_shouldThrowException() {
         // Arrange
-        when(userCreateService.execute(createCommand)).thenThrow(new UserException("User creation failed"));
+        when(userCreateService.execute(createCommand,Role.AUX_BODEGA)).thenThrow(new UserException("User creation failed"));
 
         // Act & Assert
         UserException exception = assertThrows(UserException.class, () -> {
@@ -80,7 +79,7 @@ class UserAuxCreateHandlerTest {
 
         // Assert
         assertEquals("User creation failed", exception.getErrorMessage());
-        verify(userCreateService).execute(createCommand);
+        verify(userCreateService).execute(createCommand,Role.AUX_BODEGA);
     }
 
 }

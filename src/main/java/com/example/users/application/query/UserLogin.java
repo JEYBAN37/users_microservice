@@ -1,28 +1,25 @@
 package com.example.users.application.query;
 
-import com.example.users.application.mapper.UserDtoMapper;
 import com.example.users.domain.model.dto.AuthenticationRequest;
 import com.example.users.domain.model.dto.AuthenticationResponse;
 import com.example.users.domain.model.dto.UserDto;
 import com.example.users.domain.model.exception.UserException;
 import com.example.users.domain.port.JwtPort;
-import com.example.users.domain.port.dao.UserDao;
 import com.example.users.domain.service.LoginAttemptService;
+import com.example.users.infrastructure.adapter.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import static com.example.users.domain.model.constant.UserConstant.*;
+
 
 @AllArgsConstructor
 public class UserLogin {
 
-    private static final String USER_BLOCKED = "The account is temporarily blocked. Please try again later.";
-    private static final String INCORRECT_CREDENTIALS = "Incorrect email or password.";
-
     private final AuthenticationManager authenticationManager;
-    private final UserDao userDao;
     private final JwtPort jwtService;
-    private final UserDtoMapper userDtoMapper;
     private final LoginAttemptService loginAttemptService;
 
     public AuthenticationResponse execute(AuthenticationRequest request) {
@@ -32,18 +29,33 @@ public class UserLogin {
                 throw new UserException(USER_BLOCKED);
             }
 
-            authenticationManager.authenticate(
+
+            Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
                             request.getPassword()
-                    )
-            );
+                    ));
 
+            UserEntity user = (UserEntity) authentication.getPrincipal();
 
             loginAttemptService.loginSucceeded(request.getEmail());
 
-            UserDto user = userDtoMapper.toDto(userDao.getUser(request.getEmail()));
-            String jwtToken = jwtService.generate(user);
+                    String jwtToken = jwtService.generate(new UserDto(
+                        user.getId(),
+                        user.getName(),
+                        user.getLastName(),
+                        user.getDni(),
+                        user.getTelephone(),
+                        user.getDateAge(),
+                        user.getEmail(),
+                        user.getPassword(),
+                        user.getRole(),
+                        user.getFails(),
+                        user.isLocked(),
+                        user.getLockTime()
+                ));
+
+
 
             return AuthenticationResponse.builder()
                     .token(jwtToken)

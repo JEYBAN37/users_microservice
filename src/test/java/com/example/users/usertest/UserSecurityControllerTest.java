@@ -63,7 +63,7 @@ class UserSecurityControllerTest {
         when(userCreateHandler.execute(createCommand)).thenReturn(expectedResponse);
 
         // Act
-        ResponseEntity<AuthenticationResponse> response = userSecurityController.register(createCommand);
+        ResponseEntity<AuthenticationResponse> response = userSecurityController.registerAdmin(createCommand);
 
         // Assert
         assertEquals(200, response.getStatusCodeValue());

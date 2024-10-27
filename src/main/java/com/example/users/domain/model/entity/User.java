@@ -41,7 +41,7 @@ public class User {
         this.locked = locked;
         this.lockTime = lockTime;
     }
-    public User requestToCreate(UserCreateCommand userCreateCommand)
+    public User requestToCreate(UserCreateCommand userCreateCommand , Role role)
     {
         this.name = UserName.of(userCreateCommand.getName());
         this.lastName = UserLastName.of(userCreateCommand.getLastName());
@@ -50,7 +50,7 @@ public class User {
         this.dateAge = UserDateAge.of(userCreateCommand.getDateAge());
         this.email = UserEmail.of(userCreateCommand.getEmail());
         this.password = UserPassword.of(userCreateCommand.getPassword());
-        this.role = userCreateCommand.getRole();
+        this.role = role;
         this.fails = 0;
         this.locked = false;
         this.lockTime = null;

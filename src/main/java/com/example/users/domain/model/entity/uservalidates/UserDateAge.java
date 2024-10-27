@@ -6,13 +6,11 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.time.Period;
 
+import static com.example.users.domain.model.constant.UserConstant.*;
+
 
 @Getter
 public class UserDateAge {
-    private static final int MUM_ALLOW_AGE = 18;
-    private static final String MESSAGE_NOT_PERMITTED = "The person is a minor. Not permitted.";
-    private static final String MESSAGE_AGE_NULL = "The date of birth cannot be null.";
-    private static final String MESSAGE_NOT_FUTURE = "The date of birth cannot be in the future.";
     LocalDate dateAge;
 
     private UserDateAge(LocalDate dateAge){
@@ -33,9 +31,7 @@ public class UserDateAge {
         if (dateAge.isAfter(today)) {
             throw new UserException(MESSAGE_NOT_FUTURE);
         }
-
         int age = Period.between(dateAge, today).getYears();
-
         if (age < MUM_ALLOW_AGE) {
             throw new UserException(MESSAGE_NOT_PERMITTED);
         }

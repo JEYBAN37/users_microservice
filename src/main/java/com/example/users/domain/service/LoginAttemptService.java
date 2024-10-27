@@ -7,10 +7,11 @@ import lombok.AllArgsConstructor;
 
 import java.sql.Timestamp;
 
+import static com.example.users.domain.model.constant.UserConstant.LOCK_TIME_DURATION;
+import static com.example.users.domain.model.constant.UserConstant.MAX_ATTEMPTS;
+
 @AllArgsConstructor
 public class LoginAttemptService {
-    private static final int MAX_ATTEMPTS = 3;
-    private static final int LOCK_TIME_DURATION = 15 * 60 * 1000;
 
     private final UserDao userDao;
     private final UserRepository userRepository;
@@ -42,10 +43,11 @@ public class LoginAttemptService {
     public boolean isBlocked(String email) {
         User user = userDao.getUser(email);
         if (user != null && user.isLocked()) {
-            long lockTimeInMillis = user.getLockTime().getTime();
-            long currentTimeInMillis = System.currentTimeMillis();
 
-            if (currentTimeInMillis - lockTimeInMillis > LOCK_TIME_DURATION) {
+            long timeElapsed = System.currentTimeMillis() - user.getLockTime().getTime();
+
+
+            if (timeElapsed > LOCK_TIME_DURATION) {
                 user.setLocked(false);
                 user.setFails(0);
                 user.setLockTime(null);

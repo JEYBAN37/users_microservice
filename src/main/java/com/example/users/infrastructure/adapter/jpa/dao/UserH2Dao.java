@@ -25,10 +25,7 @@ public class UserH2Dao implements UserDao {
   @Override
   public User getUser(String email) {
       Optional<UserEntity> optionalUser = userSpringJpaAdapterRepository.findByEmail(email);
-      if (optionalUser.isEmpty()){
-          throw new UserException(String.format(UserConstant.TASK_NOT_FOUND_MESSAGE_ERROR, email));
-      }
-      return userDboMapper.toDomain(optionalUser.get());
+      return optionalUser.map(userDboMapper::toDomain).orElse(null);
     }
     @Override
     public boolean emailExist(String email) {return userSpringJpaAdapterRepository.existsByEmail(email);

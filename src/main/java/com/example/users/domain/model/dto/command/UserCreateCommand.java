@@ -19,5 +19,4 @@ public class UserCreateCommand {
     private LocalDate dateAge;
     private String email;
     private String password;
-    private Role role;
 }

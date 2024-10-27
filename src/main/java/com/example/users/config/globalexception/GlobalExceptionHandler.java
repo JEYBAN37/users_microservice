@@ -13,24 +13,30 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.users.domain.model.constant.UserConstant.*;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    private static final String MESSAGE = "message";
-    private static final String TIMESTAMP = "timestamp";
-    private static final String DETAILS = "details";
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<Object> brandHandleBrandException(UserException ex, WebRequest request) {
+
+    private Map<String, Object> buildResponseBody(String message, Object details) {
         Map<String, Object> body = new HashMap<>();
         body.put(TIMESTAMP, LocalDateTime.now());
-        body.put(MESSAGE, ex.getErrorMessage());
-        body.put(DETAILS, request.getDescription(false));
+        body.put(MESSAGE, message);
+        body.put(DETAILS, details);
+        return body;
+    }
 
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<Object> UserHandleBrandException(UserException ex, WebRequest request) {
+        Map<String, Object> body = buildResponseBody(ex.getErrorMessage(), request.getDescription(false));
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LockedException.class)
-    public ResponseEntity<String> handleLockedException(LockedException ex) {
-        return ResponseEntity.status(HttpStatus.LOCKED).body("Usuario bloqueado temporalmente debido a demasiados intentos fallidos");
+    public ResponseEntity<Object> handleLockedException(LockedException ex,WebRequest request) {
+        Map<String, Object> body = buildResponseBody(ex.getMessage(),request.getDescription(false));
+        return new ResponseEntity<>(body, HttpStatus.LOCKED);
+
     }
 
 }

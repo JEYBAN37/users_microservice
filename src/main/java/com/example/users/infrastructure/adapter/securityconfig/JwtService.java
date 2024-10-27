@@ -3,28 +3,36 @@ package com.example.users.infrastructure.adapter.securityconfig;
 import com.example.users.domain.model.dto.UserDto;
 import com.example.users.domain.model.exception.UserException;
 import com.example.users.domain.port.JwtPort;
+import com.example.users.infrastructure.adapter.entity.UserEntity;
 import com.example.users.infrastructure.adapter.mapper.UserDboMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import static com.example.users.domain.model.constant.UserConstant.*;
+
 @Service
-@AllArgsConstructor
+
 public class JwtService implements JwtPort {
+
     private final UserDboMapper userDboMappers;
-    private static final String SECRET_KEY = "294A404E635266556A586E327235753878214125442A472D4B6150645367566B";
+    private final String secretKey;
+
+    public JwtService (@Value("${jwt.secret-key}") String secretKey , UserDboMapper userDboMapper){
+        this.secretKey = secretKey;
+        this.userDboMappers = userDboMapper;
+    }
 
     @Override
     public String generateToken(UserDto userDto) {
@@ -34,8 +42,8 @@ public class JwtService implements JwtPort {
     public boolean isTokenValid(String token, UserDto userDto) {
         final String username = extractUsername(token);
         final Claims claims = extractAllClaims(token);
-        List<String> roles = claims.get("roles", List.class);
-        return username.equals(userDboMappers.toDto(userDto).getUsername()) && roles.contains("ROLE_ADMIN");
+        List<String> roles = claims.get(ROLES, List.class);
+        return username.equals(userDboMappers.toDto(userDto).getUsername()) && roles.contains(ROLE_ADMIN);
     }
 
 
@@ -47,7 +55,7 @@ public class JwtService implements JwtPort {
     @Override
     public String generate(UserDto userDto) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", "USER");
+        claims.put("role", USER);
         return crateToken(claims,userDboMappers.toDto(userDto));
 
     }
@@ -66,16 +74,17 @@ public class JwtService implements JwtPort {
                .getBody();
         Date expirationDate = claims.getExpiration();
         if (expirationDate.before(new Date())) {
-            throw new UserException("Token ha expirado");
+            throw new UserException(TOKEN_EXPIRED);
         }
        return claims;
     }
 
-    private String crateToken(Map<String, Object> extraClaims, @NotNull UserDetails userDetails) {
+    private String crateToken(Map<String, Object> extraClaims, @NotNull UserEntity userDetails) {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-        extraClaims.put("roles", roles);
+        extraClaims.put(ROLES, roles);
+        extraClaims.put("id",userDetails.getId());
 
         return Jwts.builder()
                 .setClaims(extraClaims)
@@ -87,7 +96,7 @@ public class JwtService implements JwtPort {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = hexStringToByteArray(SECRET_KEY);
+        byte[] keyBytes = hexStringToByteArray(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

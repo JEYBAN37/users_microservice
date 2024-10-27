@@ -1,16 +1,12 @@
 package com.example.users.domain.model.entity.uservalidates;
-
 import com.example.users.domain.model.exception.UserException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import static com.example.users.domain.model.constant.UserConstant.*;
 
 @NoArgsConstructor
 @Getter
 public class UserName {
-    private static final int MAXIMUM_ALLOW_LETTERS = 50;
-    private static final String MESSAGE_MANDATORY = "Name is mandatory";
-    private static final String MESSAGE_MAX_BIGGER = "Name don't be bigger than 50 characters";
-
     String name;
 
     private UserName(String name) {
@@ -18,14 +14,15 @@ public class UserName {
     }
 
     public static UserName of(String name) {
-        toValidName(name);
-        return new UserName(name);
+        return new UserName( toValidName(name));
     }
 
-    private static void toValidName(String name){
+    private static String toValidName(String name){
         if(name == null || name.isEmpty())
-            throw new UserException(MESSAGE_MANDATORY);
-        if(name.length() > MAXIMUM_ALLOW_LETTERS)
-            throw new UserException(MESSAGE_MAX_BIGGER);
+            throw new UserException(MESSAGE_MANDATORY_NAME);
+        String nameTrip = name.trim().toUpperCase();
+        if(nameTrip.length() > MAXIMUM_ALLOW_LETTERS_NAME)
+            throw new UserException(MESSAGE_MAX_BIGGER_NAME);
+        return nameTrip;
     }
 }

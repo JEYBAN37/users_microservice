@@ -30,7 +30,7 @@ public class ConfigFilter {
                                         "/swagger-ui.html",  // Página de Swagger UI
                                         "/swagger-resources/**",  // Recursos de Swagger
                                         "/webjars/**"    ).permitAll()
-                                .requestMatchers("/users/**").hasRole("ADMIN")
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

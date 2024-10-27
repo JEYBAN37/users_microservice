@@ -3,12 +3,11 @@ package com.example.users.domain.model.entity.uservalidates;
 import com.example.users.domain.model.exception.UserException;
 import lombok.Getter;
 
+import static com.example.users.domain.model.constant.UserConstant.*;
+
+
 @Getter
 public class UserDni {
-    private static final int MAXIMUM_ALLOW_LETTERS = 50;
-    private static final String MESSAGE_MANDATORY = "Dni is mandatory";
-    private static final String MESSAGE_MAX_BIGGER = "Dni don't be bigger than 50 characters";
-    private static final String MESSAGE_NOT_DIGITS = "Dni don't Digits";
 
     String  dni;
     private UserDni(String dni) {
