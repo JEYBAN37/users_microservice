@@ -1,4 +1,4 @@
-package com.example.users.application.query;
+package com.example.users.application.command;
 
 import com.example.users.domain.model.dto.AuthenticationRequest;
 import com.example.users.domain.model.dto.AuthenticationResponse;

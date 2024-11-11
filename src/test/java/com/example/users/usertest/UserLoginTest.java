@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.example.users.application.mapper.UserDtoMapper;
-import com.example.users.application.query.UserLogin;
+import com.example.users.application.command.UserLogin;
 import com.example.users.domain.model.dto.AuthenticationRequest;
-import com.example.users.domain.model.dto.AuthenticationResponse;
 import com.example.users.domain.model.dto.UserDto;
 
 import com.example.users.domain.model.entity.User;
-import com.example.users.domain.model.exception.UserException;
 import com.example.users.domain.port.JwtPort;
 import com.example.users.domain.port.dao.UserDao;
 import com.example.users.domain.service.LoginAttemptService;
@@ -21,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 class UserLoginTest {
@@ -46,7 +43,7 @@ class UserLoginTest {
 
     private AuthenticationRequest request;
     private UserDto userDto;
-    private User user;
+
 
     @BeforeEach
     public void setUp() {

@@ -1,6 +1,6 @@
 package com.example.users.usertest;
 import com.example.users.application.command.UserCreateHandler;
-import com.example.users.application.query.UserLogin;
+import com.example.users.application.command.UserLogin;
 import com.example.users.domain.model.dto.AuthenticationRequest;
 import com.example.users.domain.model.dto.AuthenticationResponse;
 import com.example.users.domain.model.dto.command.UserCreateCommand;

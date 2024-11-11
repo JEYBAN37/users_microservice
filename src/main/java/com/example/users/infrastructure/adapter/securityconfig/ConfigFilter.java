@@ -1,6 +1,5 @@
 package com.example.users.infrastructure.adapter.securityconfig;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +10,15 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-public class ConfigFilter {
-
+public class ConfigFilter implements WebMvcConfigurer {
+    private final RoleInterceptor roleInterceptor;
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthFilter;
 
@@ -41,8 +43,11 @@ public class ConfigFilter {
                 .build();
     }
 
-
-
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(roleInterceptor)
+                .addPathPatterns("/admin/**", "/user/**", "/secure/**");
+    }
 
 
 }

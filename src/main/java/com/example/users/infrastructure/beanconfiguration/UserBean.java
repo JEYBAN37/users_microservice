@@ -1,7 +1,6 @@
 package com.example.users.infrastructure.beanconfiguration;
 
-import com.example.users.application.mapper.UserDtoMapper;
-import com.example.users.application.query.UserLogin;
+import com.example.users.application.command.UserLogin;
 import com.example.users.domain.port.JwtPort;
 import com.example.users.domain.port.dao.UserDao;
 import com.example.users.domain.port.repository.UserRepository;

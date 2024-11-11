@@ -8,7 +8,6 @@ import com.example.users.infrastructure.adapter.mapper.UserDboMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,9 +40,11 @@ public class JwtService implements JwtPort {
 
     public boolean isTokenValid(String token, UserDto userDto) {
         final String username = extractUsername(token);
-        final Claims claims = extractAllClaims(token);
-        List<String> roles = claims.get(ROLES, List.class);
-        return username.equals(userDboMappers.toDto(userDto).getUsername()) && roles.contains(ROLE_ADMIN);
+        return username.equals(userDboMappers.toDto(userDto).getUsername());
+    }
+
+    public List<String> extractRoles(String token) {
+        return extractClaim(token, claims -> claims.get("roles", List.class));
     }
 
 
@@ -97,8 +98,14 @@ public class JwtService implements JwtPort {
 
     private Key getSignInKey() {
         byte[] keyBytes = hexStringToByteArray(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public boolean hasAnyRole(String token, List<String> requiredRoles) {
+        List<String> userRoles = extractRoles(token);
+        return userRoles.stream().anyMatch(requiredRoles::contains);
+    }
+
 
     private byte[] hexStringToByteArray(String s) {
         int len = s.length();
