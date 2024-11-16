@@ -33,7 +33,7 @@ public class UserBean {
 
     @Bean
     public UserLogin userLogin(AuthenticationManager authenticationManager,
-                               JwtPort jwtPort,  LoginAttemptService loginAttemptService){
+                               JwtPort jwtPort, LoginAttemptService loginAttemptService){
         return new UserLogin(authenticationManager,jwtPort, loginAttemptService);
     }
 
@@ -41,6 +41,7 @@ public class UserBean {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {

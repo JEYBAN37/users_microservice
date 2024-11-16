@@ -1,5 +1,4 @@
 package com.example.users.application.command;
-
 import com.example.users.domain.model.dto.AuthenticationRequest;
 import com.example.users.domain.model.dto.AuthenticationResponse;
 import com.example.users.domain.model.dto.UserDto;
@@ -12,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import static com.example.users.domain.model.constant.UserConstant.*;
 
 
@@ -29,40 +30,44 @@ public class UserLogin {
                 throw new UserException(USER_BLOCKED);
             }
 
+            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
 
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    ));
+            if (currentAuthentication != null && currentAuthentication.isAuthenticated() &&
+                    !currentAuthentication.getPrincipal().equals("anonymousUser")) {
+                throw new UserException(ALREADY_AUTENTICATED);
+            }
+
+            UsernamePasswordAuthenticationToken userCredential = new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+            );
+
+            Authentication authentication = authenticationManager.authenticate(userCredential);
 
             UserEntity user = (UserEntity) authentication.getPrincipal();
 
             loginAttemptService.loginSucceeded(request.getEmail());
 
-                    String jwtToken = jwtService.generate(new UserDto(
-                        user.getId(),
-                        user.getName(),
-                        user.getLastName(),
-                        user.getDni(),
-                        user.getTelephone(),
-                        user.getDateAge(),
-                        user.getEmail(),
-                        user.getPassword(),
-                        user.getRole(),
-                        user.getFails(),
-                        user.isLocked(),
-                        user.getLockTime()
-                ));
-
-
+            String jwtToken = jwtService.generate(new UserDto(
+                    user.getId(),
+                    user.getName(),
+                    user.getLastName(),
+                    user.getDni(),
+                    user.getTelephone(),
+                    user.getDateAge(),
+                    user.getEmail(),
+                    user.getPassword(),
+                    user.getRole(),
+                    user.getFails(),
+                    user.isLocked(),
+                    user.getLockTime()
+            ));
 
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .build();
 
         } catch (BadCredentialsException e) {
-
             loginAttemptService.loginFailed(request.getEmail());
 
             if (loginAttemptService.isBlocked(request.getEmail())) {
@@ -72,4 +77,6 @@ public class UserLogin {
             throw new UserException(INCORRECT_CREDENTIALS);
         }
     }
+
+
 }

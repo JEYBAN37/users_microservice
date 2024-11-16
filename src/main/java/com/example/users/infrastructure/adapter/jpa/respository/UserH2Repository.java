@@ -18,7 +18,7 @@ public class UserH2Repository implements UserRepository {
 
     @Override
     public User create(User request) {
-        UserEntity userToSave = userDboMapper.toDatabase(request);
+        UserEntity userToSave = userDboMapper.toDatabase(request,true);
         UserEntity userSaved = userSpringJpaAdapterRepository.save(userToSave);
         return userDboMapper.toDomain(userSaved);
     }
@@ -30,7 +30,7 @@ public class UserH2Repository implements UserRepository {
 
     @Override
     public User update(User request) {
-        UserEntity userToUpdate = userDboMapper.toDatabase(request);
+        UserEntity userToUpdate = userDboMapper.toDatabase(request,false);
         UserEntity userUpdate = userSpringJpaAdapterRepository.save(userToUpdate);
         return userDboMapper.toDomain(userUpdate);
     }

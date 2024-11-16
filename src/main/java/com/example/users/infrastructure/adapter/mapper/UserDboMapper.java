@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class UserDboMapper {
 private final PasswordEncoder encoderPassword;
-public UserEntity toDatabase (User domain){
+public UserEntity toDatabase (User domain , boolean encodePassword){
     if(domain == null){
         return null;
     }
@@ -24,7 +24,7 @@ public UserEntity toDatabase (User domain){
             domain.getTelephone(),
             domain.getDateAge(),
             domain.getEmail(),
-            encoderPassword.encode(domain.getPassword()),
+            encodePassword ? encoderPassword.encode(domain.getPassword()): domain.getPassword(),
             domain.getRole(),
             domain.getFails(),
             domain.isLocked(),
