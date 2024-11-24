@@ -32,7 +32,7 @@ public class UserCommandController {
             @ApiResponse(responseCode = "409", description = "User already exists or there is a conflict", content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content)
     })
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/register/aux_bodega")
     public ResponseEntity<UserDto> createAux (@RequestBody UserCreateCommand createCommand) {
         return ResponseEntity.ok(userAuxCreateHandler.execute(createCommand));

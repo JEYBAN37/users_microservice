@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -27,11 +28,11 @@ public class ConfigFilter implements WebMvcConfigurer {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
-                                .requestMatchers("/public/**", "/v3/api-docs/**",   // Swagger 3 API Docs
-                                        "/swagger-ui/**",    // Swagger UI
-                                        "/swagger-ui.html",  // Página de Swagger UI
-                                        "/swagger-resources/**",  // Recursos de Swagger
-                                        "/webjars/**"    ).permitAll()
+                                .requestMatchers("/public/**", "/v3/api-docs/**", // Swagger 3 API Docs
+                                        "/swagger-ui/**", // Swagger UI
+                                        "/swagger-ui.html", // Página de Swagger UI
+                                        "/swagger-resources/**", // Recursos de Swagger
+                                        "/webjars/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
@@ -40,8 +41,10 @@ public class ConfigFilter implements WebMvcConfigurer {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
                 .build();
     }
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

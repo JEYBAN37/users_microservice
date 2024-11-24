@@ -30,12 +30,6 @@ public class UserLogin {
                 throw new UserException(USER_BLOCKED);
             }
 
-            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-
-            if (currentAuthentication != null && currentAuthentication.isAuthenticated() &&
-                    !currentAuthentication.getPrincipal().equals("anonymousUser")) {
-                throw new UserException(ALREADY_AUTENTICATED);
-            }
 
             UsernamePasswordAuthenticationToken userCredential = new UsernamePasswordAuthenticationToken(
                     request.getEmail(),
